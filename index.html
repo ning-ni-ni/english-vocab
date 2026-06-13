@@ -241,11 +241,16 @@ function speakWord(accent) {
   var w = document.getElementById("result-word").textContent || (window._lookup && window._lookup.word);
   if (!w || !window.speechSynthesis) return;
   window.speechSynthesis.cancel();
+  window.speechSynthesis.getVoices();
   var u = new SpeechSynthesisUtterance(w);
   u.lang = accent;
-  u.rate = 0.85;
+  u.rate = 0.9;
+  u.volume = 1;
+  var v = window.speechSynthesis.getVoices();
+  for (var i = 0; i < v.length; i++) { if (v[i].lang.startsWith(accent.split("-")[0])) { u.voice = v[i]; break; } }
   window.speechSynthesis.speak(u);
 }
+function speak(accent) { speakWord(accent); }
 
 // Save
 document.getElementById("btn-save").onclick = function() {
