@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Test</title></head>
+<body>
+<div id="status" style="padding:20px;font-size:18px;">Loading...</div>
+<input type="text" id="word" placeholder="type a word" style="font-size:18px;padding:8px;width:300px;margin:10px 20px;">
+<button id="go" style="font-size:18px;padding:8px 16px;margin:10px 0;">🔍</button>
+<div id="result" style="padding:20px;font-size:14px;"></div>
+<script>
+var st = document.getElementById("status");
+var re = document.getElementById("result");
+st.textContent = "JavaScript is running! " + new Date().toLocaleTimeString();
+
+document.getElementById("go").onclick = function() {
+  var w = document.getElementById("word").value.trim().toLowerCase();
+  if (!w) { re.textContent = "Enter a word"; return; }
+  re.textContent = "Fetching: " + w + "...";
+  st.textContent = "Fetching...";
+  
+  fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(w))
+    .then(function(r) {
+      if (!r.ok) throw new Error("Not found");
+      return r.json();
+    })
+    .then(function(d) {
+      var entry = d[0];
+      var ph = entry.phonetic || (entry.phonetics && entry.phonetics[0] && entry.phonetics[0].text) || "";
+      re.innerHTML = "<b>" + entry.word + "</b> " + ph + "<br><br>";
+      entry.meanings.forEach(function(m) {
+        m.definitions.slice(0, 2).forEach(function(def) {
+          re.innerHTML += "<i>" + m.partOfSpeech + "</i>: " + def.definition + "<br>";
+          if (def.example) re.innerHTML += "<span style='color:#888'>例: " + def.example + "</span><br>";
+        });
+      });
+      st.textContent = "Success!";
+    })
+    .catch(function(e) {
+      re.textContent = "Error: " + e.message;
+      st.textContent = "Failed";
+    });
+};
+</script>
+</body>
+</html>
