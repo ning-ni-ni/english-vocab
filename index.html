@@ -1,311 +1,380 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>英语生词本</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;font-size:16px;line-height:1.5;background:#f5f5f5;color:#1a1a2e;max-width:600px;margin:0 auto;padding:16px;min-height:100dvh}
-@media(prefers-color-scheme:dark){body{background:#111118;color:#e8e8ed}}
-.wrap{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:16px}
-@media(prefers-color-scheme:dark){.wrap{background:#1a1a25}}
-h1{font-size:20px;margin-bottom:8px}
-.row{display:flex;gap:8px}.row input{flex:1}
-input,select,textarea{font-family:inherit;font-size:16px;color:inherit;background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:8px;padding:10px 12px;outline:none;width:100%}
-input:focus,select:focus{border-color:#4f6ef7}
-@media(prefers-color-scheme:dark){input,select{background:#111118;border-color:#2a2a38}}
-button{padding:10px 18px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;min-height:44px;white-space:nowrap}
-button:active{transform:scale(0.97)}
-.pri{background:#4f6ef7;color:#fff}.pri:hover{background:#3b5de7}
-.sec{background:transparent;color:#6b7280;border:1.5px solid #e5e7eb}
-@media(prefers-color-scheme:dark){.sec{color:#9ca3af;border-color:#2a2a38}}
-.sm{padding:6px 10px;min-height:36px;font-size:13px}
-.w100{width:100%}
-#dbg{display:none;background:#ff8;color:#000;padding:8px;font-size:13px;white-space:pre-wrap;border-radius:6px;margin-bottom:8px}
-.loading{display:none;text-align:center;padding:32px}
-.spinner{width:28px;height:28px;border:3px solid #e5e7eb;border-top-color:#4f6ef7;border-radius:50%;animation:spin .6s linear infinite;margin:0 auto}
-@keyframes spin{to{transform:rotate(360deg)}}
-#err{display:none;text-align:center;padding:24px;color:#6b7280}
-#err .ic{font-size:36px;margin-bottom:8px}
-#res{display:none}.rw{font-size:24px;font-weight:700;margin-bottom:4px}.rp{font-size:14px;color:#6b7280;margin-bottom:8px}
-.rt{display:inline-block;font-size:12px;padding:3px 10px;border-radius:10px;background:#eef;color:#4f6ef7;margin-bottom:12px}
-.sec{border-top:1px solid #e5e7eb;padding:12px 0}
-@media(prefers-color-scheme:dark){.sec{border-color:#2a2a38}}
-.lbl{font-size:13px;font-weight:600;color:#6b7280;margin-bottom:8px}
-.df{padding:6px 0;font-size:13px;color:#6b7280;line-height:1.5}
-.ex{padding:8px 10px;background:#f5f5f5;border-radius:6px;margin-bottom:6px;line-height:1.5}
-@media(prefers-color-scheme:dark){.ex{background:#111118}}
-.ex .en{font-size:14px;font-style:italic}.ex .cn{font-size:13px;color:#6b7280;margin-top:2px}
-.meaning-inp{padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:16px;font-weight:500;outline:none;width:100%;margin-top:4px;background:#f5f5f5;color:#1a1a2e;font-family:inherit}
-.meaning-inp:focus{border-color:#4f6ef7}
-@media(prefers-color-scheme:dark){.meaning-inp{background:#111118;border-color:#2a2a38}}
-.say-r{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.say-r button{flex:1;min-width:100px;font-size:14px}
-.sv-r{display:flex;gap:8px;padding-top:12px;border-top:1px solid #e5e7eb}
-@media(prefers-color-scheme:dark){.sv-r{border-color:#2a2a38}}
-.sv-r button{flex:1}.sv-r select{flex:0;padding:8px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;background:#f5f5f5;color:#1a1a2e}
-@media(prefers-color-scheme:dark){.sv-r select{background:#111118;border-color:#2a2a38}}
-/* Tabs */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;font-size:16px;line-height:1.5;background:#f5f5f5;color:#1a1a2e;max-width:600px;margin:0 auto;padding:16px;min-height:100dvh}
+  @media(prefers-color-scheme:dark){body{background:#111118;color:#e8e8ed}}
+  .wrap{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:16px}
+  @media(prefers-color-scheme:dark){.wrap{background:#1a1a25;box-shadow:0 1px 3px rgba(0,0,0,.3)}}
+  h1{font-size:20px;margin-bottom:8px}
+  .row{display:flex;gap:8px}
+  .row input{flex:1;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:16px;outline:none;width:100%;background:#f5f5f5;color:#1a1a2e;font-family:inherit}
+  .row input:focus{border-color:#4f6ef7}
+  @media(prefers-color-scheme:dark){.row input{background:#111118;color:#e8e8ed;border-color:#2a2a38}}
+  button{padding:10px 18px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;min-height:44px;white-space:nowrap}
+  button.primary{background:#4f6ef7;color:#fff}
+  button.secondary{background:transparent;color:#6b7280;border:1.5px solid #e5e7eb}
+  @media(prefers-color-scheme:dark){button.secondary{color:#9ca3af;border-color:#2a2a38}}
+  button:active{transform:scale(0.97)}
+  #dbg{display:none;background:#ffe;color:#000;padding:8px;font-size:13px;white-space:pre-wrap;border-radius:6px;margin-bottom:8px}
+  #loading{display:none;text-align:center;padding:32px}
+  #error{display:none;text-align:center;padding:24px;color:#6b7280}
+  #error .icon{font-size:36px;margin-bottom:8px}
+  #result{display:none;margin-top:12px}
+  #result .word{font-size:24px;font-weight:700;margin-bottom:4px}
+  #result .phonetic{font-size:14px;color:#6b7280;margin-bottom:8px}
+  #result .pos{display:inline-block;font-size:12px;padding:3px 10px;border-radius:10px;background:#eef;color:#4f6ef7;margin-bottom:12px}
+  #result .section{border-top:1px solid #e5e7eb;padding:12px 0}
+  @media(prefers-color-scheme:dark){#result .section{border-color:#2a2a38}}
+  #result .label{font-size:13px;font-weight:600;color:#6b7280;margin-bottom:8px}
+  #result .def{padding:6px 0;font-size:13px;color:#6b7280;line-height:1.5}
+  #result .def .pos-label{color:#4f6ef7;font-weight:500;font-size:11px}
+  #result .example{padding:8px 10px;background:#f5f5f5;border-radius:6px;margin-bottom:6px;line-height:1.5}
+  @media(prefers-color-scheme:dark){#result .example{background:#111118}}
+  #result .example .en{font-size:14px;font-style:italic}
+  #result .example .cn{font-size:13px;color:#6b7280;margin-top:2px}
+  .say-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .say-row button{flex:1;min-width:100px;font-size:14px}
+  #meaning-input{padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:16px;font-weight:500;outline:none;width:100%;background:#f5f5f5;color:#1a1a2e;font-family:inherit;margin-top:4px}
+  #meaning-input:focus{border-color:#4f6ef7}
+  @media(prefers-color-scheme:dark){#meaning-input{background:#111118;color:#e8e8ed;border-color:#2a2a38}}
+  #result .save-row{display:flex;gap:8px;border-top:1px solid #e5e7eb;padding-top:12px}
+  @media(prefers-color-scheme:dark){#result .save-row{border-color:#2a2a38}}
+  #result .save-row button{flex:1}
+  #result .save-row select{flex:0 0 auto;padding:8px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;background:#f5f5f5;color:#1a1a2e}
+  @media(prefers-color-scheme:dark){#result .save-row select{background:#111118;color:#e8e8ed;border-color:#2a2a38}}
+
 .tab-bar{display:flex;gap:0;margin-bottom:16px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 @media(prefers-color-scheme:dark){.tab-bar{background:#1a1a25}}
 .tab-bar button{flex:1;background:transparent;border:none;font-size:14px;font-weight:500;padding:12px;color:#6b7280;cursor:pointer;position:relative}
 .tab-bar button.active{color:#4f6ef7;font-weight:600}
-@media(prefers-color-scheme:dark){.tab-bar button.active{color:#6b83ff}}
-.tab-bar button.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:3px;background:#4f6ef7;border-radius:3px 3px 0 0}
+.tab-bar button.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:3px;background:#4f6ef7}
 .tc{display:block}.tc.vh{display:none!important}
-/* Word list */
 .wl{display:flex;flex-direction:column;gap:8px}
 .wc{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;align-items:flex-start;gap:12px;animation:fadeIn .25s ease}
 @media(prefers-color-scheme:dark){.wc{background:#1a1a25}}
 .wc .wm{flex:1;min-width:0}
-.wc-w{font-size:17px;font-weight:600;word-break:break-word}
-.wc-p{font-size:13px;color:#6b7280;font-weight:400;margin-left:4px}
-.wc-m{font-size:14px;color:#6b7280;margin-top:1px}
-.wc-e{font-size:13px;margin-top:6px;padding:6px 10px;background:#f5f5f5;border-radius:6px;line-height:1.4;font-style:italic}
-@media(prefers-color-scheme:dark){.wc-e{background:#111118}}
+.wc-w{font-size:17px;font-weight:600}.wc-p{font-size:13px;color:#6b7280;font-weight:400;margin-left:4px}
+.wc-m{font-size:14px;color:#6b7280;margin-top:1px}.wc-e{font-size:13px;margin-top:6px;padding:6px 10px;background:#f5f5f5;border-radius:6px;font-style:italic}
 .wc-meta{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap}
 .wc-t{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(79,110,247,.1);color:#4f6ef7;cursor:pointer}
 .wc-time{font-size:11px;color:#6b7280}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-/* Toast */
-#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a2e;color:#f5f5f5;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;opacity:0;transition:all .3s ease;pointer-events:none;z-index:100}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}@media(prefers-color-scheme:dark){#toast{background:#e8e8ed;color:#111118}}
-/* Modal */
-#tmodal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200}
-#tmodal .bg{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4)}
-#tmodal .c{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;border-radius:10px;padding:20px;width:90%;max-width:400px;z-index:1}
-@media(prefers-color-scheme:dark){#tmodal .c{background:#1a1a25}}
-#tmodal h3{margin-bottom:12px;font-size:16px}
-.tg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.tg span{display:inline-flex;align-items:center;gap:4px;font-size:13px;padding:4px 10px;border-radius:14px;background:rgba(79,110,247,.1);color:#4f6ef7}
-.tg span .d{cursor:pointer;opacity:.6;font-size:14px}
-</style></head><body>
+@media(prefers-color-scheme:dark){.wc-e{background:#111118}}
+</style>
+</head>
+<body>
+
 <div id="dbg"></div>
-<div id="toast"></div>
+<h1>英语生词本 <span id="count" style="font-size:14px;color:#6b7280;font-weight:400">0 个词</span></h1>
 
-<div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
-  <h1>英语生词本 <span id="cnt" style="font-size:14px;color:#6b7280;font-weight:400">0 个词</span></h1>
-  <div style="display:flex;gap:4px">
-    <button class="sec sm" onclick="exp()" title="导出">↗</button>
-    <button class="sec sm" onclick="document.getElementById('impf').click()" title="导入">↘</button>
-    <input type="file" id="impf" accept=".json" style="display:none" onchange="imp(event)">
-  </div>
-</div>
-
-<div class="tab-bar">
-  <button class="active" data-tab="add">添加</button>
-  <button data-tab="list">词库</button>
-  <button data-tab="quiz">测验</button>
-</div>
-
-<!-- Add Tab -->
 <div id="tab-add" class="tc">
-  <div class="wrap" style="gap:8px">
-    <div class="row">
-      <input type="text" id="iw" placeholder="输入英语单词..." autocomplete="off">
-      <button class="pri" id="btnlk">🔍</button>
-    </div>
-  </div>
-  <div class="loading" id="ld"><div class="spinner"></div><div style="margin-top:8px;color:#6b7280;font-size:14px">查询中...</div></div>
-  <div class="wrap" id="err"><div class="ic">😕</div><div id="errt"></div></div>
-  <div id="res">
-    <div class="wrap">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div><div class="rw" id="rw"></div><div class="rp" id="rp"></div></div>
-        <div style="display:flex;gap:6px">
-          <button class="sec sm" onclick="spk('en-GB')" id="sgb">🇬🇧</button>
-          <button class="sec sm" onclick="spk('en-US')" id="sus">🇺🇸</button>
-        </div>
-      </div>
-      <div><span class="rt" id="rpos"></span></div>
-      <div class="sec"><div class="lbl">📖 含义</div>
-        <input class="meaning-inp" id="mi" placeholder="中文释义...">
-        <div class="df" id="defs"></div>
-      </div>
-      <div class="sec"><div class="lbl">💬 用法</div><div id="exs"></div></div>
-      <div class="sec"><div class="lbl">🔊 发音</div>
-        <div class="say-r">
-          <button class="sec" onclick="spk('en-GB')">🇬🇧 英式</button>
-          <button class="sec" onclick="spk('en-US')">🇺🇸 美式</button>
-        </div>
-      </div>
-      <div class="sv-r">
-        <select id="tsel"><option>其他</option></select>
-        <button class="pri" id="sav">＋ 记录</button>
-      </div>
-    </div>
-  </div>
+<div class="tab-bar">
+  <button class="active" data-tab="add">??</button>
+  <button data-tab="list">??</button>
+  <button data-tab="quiz">??</button>
 </div>
-
-<!-- List Tab -->
+<!-- Word List Tab -->
 <div id="tab-list" class="tc vh">
   <div class="wrap"><div class="row" style="margin-bottom:8px">
-    <input type="text" id="sw" placeholder="搜索单词..." autocomplete="off">
-    <select id="ft" style="flex:0;width:auto;padding:8px"><option value="">全部</option></select>
+    <input type="text" id="sw" placeholder="????..." autocomplete="off">
+    <select id="ft" style="flex:0;width:auto;padding:8px"><option value="">??</option></select>
   </div></div>
   <div class="wl" id="wl"></div>
 </div>
-
 <!-- Quiz Tab -->
 <div id="tab-quiz" class="tc vh">
   <div class="wrap">
     <div class="row" style="margin-bottom:8px">
-      <select id="qt" style="flex:1"><option value="">全部词</option></select>
-      <button class="pri sm" id="qstart">开始</button>
+      <select id="qt" style="flex:1"><option value="">???</option></select>
+      <button class="pri sm" id="qstart">??</button>
     </div>
     <label style="font-size:13px;color:#6b7280;display:flex;align-items:center;gap:4px">
-      <input type="checkbox" id="qmode"> 看中文拼英文
-    </label>
+      <input type="checkbox" id="qmode"> ??????</label>
   </div>
   <div class="wrap" id="qc" style="text-align:center;display:none">
     <div style="font-size:28px;font-weight:700;margin-bottom:8px" id="qq"></div>
     <div style="font-size:13px;color:#6b7280;margin-bottom:16px" id="qi"></div>
     <div class="row" style="max-width:320px;margin:0 auto">
-      <input type="text" id="qa" placeholder="输入答案..." autocomplete="off">
-      <button class="pri sm" id="qchk">确认</button>
-      <button class="sec sm" id="qans">答案</button>
+      <input type="text" id="qa" placeholder="????..." autocomplete="off">
+      <button class="pri sm" id="qchk">??</button>
+      <button class="sec sm" id="qans">??</button>
     </div>
     <div id="qr" style="margin-top:12px;font-size:15px;min-height:24px"></div>
   </div>
-  <div id="qe" class="wrap" style="text-align:center;padding:32px;display:none">
-    <div style="font-size:48px;margin-bottom:12px;opacity:.5">🎯</div>
-    <p>没有符合条件的单词</p>
+  <div id="qe" style="text-align:center;padding:60px 20px;color:#6b7280;display:none">
+    <div style="font-size:48px;opacity:.5">??</div><p>?????????</p></div>
+</div>
+<!-- Tag Manager -->
+<div id="tmodal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200">
+<div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4)" onclick="closeTM()"></div>
+<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;width:90%;max-width:400px;z-index:1;border-radius:10px">
+<h3 style="margin-bottom:12px">????</h3>
+<div id="tg" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
+<div class="row"><input type="text" id="nti" placeholder="?????"><button class="pri sm" onclick="addNT()">??</button></div>
+<button class="sec w100" style="margin-top:12px" onclick="closeTM()">??</button>
+</div></div>
+<div class="wrap" style="gap:8px">
+  <div class="row">
+    <input type="text" id="input-word" placeholder="输入英语单词..." autocomplete="off">
+    <button class="primary" id="btn-lookup">🔍</button>
   </div>
 </div>
 
-<!-- Tag Manager Modal -->
-<div id="tmodal">
-  <div class="bg" onclick="closeTM()"></div>
-  <div class="c">
-    <h3>管理标签</h3>
-    <div class="tg" id="tg"></div>
-    <div class="row"><input type="text" id="nti" placeholder="新标签名称"><button class="pri sm" onclick="addNT()">添加</button></div>
-    <button class="sec w100" style="margin-top:12px" onclick="closeTM()">完成</button>
+<div id="loading" class="wrap">
+  <div style="width:28px;height:28px;border:3px solid #e5e7eb;border-top-color:#4f6ef7;border-radius:50%;animation:spin .6s linear infinite;margin:0 auto"></div>
+  <div style="margin-top:8px;color:#6b7280;font-size:14px">正在查询...</div>
+</div>
+
+<style>@keyframes spin{to{transform:rotate(360deg)}}
+.tab-bar{display:flex;gap:0;margin-bottom:16px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+@media(prefers-color-scheme:dark){.tab-bar{background:#1a1a25}}
+.tab-bar button{flex:1;background:transparent;border:none;font-size:14px;font-weight:500;padding:12px;color:#6b7280;cursor:pointer;position:relative}
+.tab-bar button.active{color:#4f6ef7;font-weight:600}
+.tab-bar button.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:3px;background:#4f6ef7}
+.tc{display:block}.tc.vh{display:none!important}
+.wl{display:flex;flex-direction:column;gap:8px}
+.wc{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;align-items:flex-start;gap:12px;animation:fadeIn .25s ease}
+@media(prefers-color-scheme:dark){.wc{background:#1a1a25}}
+.wc .wm{flex:1;min-width:0}
+.wc-w{font-size:17px;font-weight:600}.wc-p{font-size:13px;color:#6b7280;font-weight:400;margin-left:4px}
+.wc-m{font-size:14px;color:#6b7280;margin-top:1px}.wc-e{font-size:13px;margin-top:6px;padding:6px 10px;background:#f5f5f5;border-radius:6px;font-style:italic}
+.wc-meta{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap}
+.wc-t{font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(79,110,247,.1);color:#4f6ef7;cursor:pointer}
+.wc-time{font-size:11px;color:#6b7280}
+@media(prefers-color-scheme:dark){.wc-e{background:#111118}}
+</style>
+
+<div id="error" class="wrap">
+  <div class="icon">😕</div>
+  <div id="error-text"></div>
+</div>
+
+<div id="result">
+  <div class="wrap">
+    <div id="result-word" class="word"></div>
+    <div id="result-phonetic" class="phonetic"></div>
+    <div id="result-pos" class="pos"></div>
+
+    <div class="section">
+      <div class="label">📖 含义 · 掌握什么</div>
+      <input type="text" id="meaning-input" placeholder="中文释义...">
+      <div id="def-container" class="def" style="margin-top:6px"></div>
+    </div>
+
+    <div class="section">
+      <div class="label">💬 用法 · 如何应用</div>
+      <div id="example-container"></div>
+    </div>
+
+    <div class="section">
+      <div class="label">🔊 发音 · 如何说</div>
+      <div class="say-row">
+        <button class="secondary" id="btn-sound-gb">🇬🇧 英式发音</button>
+        <button class="secondary" id="btn-sound-us">🇺🇸 美式发音</button>
+      </div>
+    </div>
+
+    <div class="save-row">
+      <select id="result-tag"><option>其他</option></select>
+      <button class="primary" id="btn-save">＋ 记录生词</button>
+    </div>
   </div>
 </div>
 
-<script>
-var D=document.getElementById("dbg");
-function db(m){D.style.display="block";D.innerHTML+=new Date().toLocaleTimeString()+": "+m+"<br>"}
-window.onerror=function(m,u,l){db("ERR: "+m+" ("+u+":"+l+")")}
-db("Page loaded");
+<div id="status"></div>
 
-var SK='eng_voc',TK='eng_voc_tags',words=[],tags=['副词','形容词','动词','名词','短语','其他'],qq=[],qi=0;
-
-function L(){try{var r=localStorage.getItem(SK);words=r?JSON.parse(r):[]}catch(e){}try{var r=localStorage.getItem(TK);if(r)tags=JSON.parse(r)}catch(e){}}
-function S(){localStorage.setItem(SK,JSON.stringify(words));localStorage.setItem(TK,JSON.stringify(tags))}
-function TM(s){var e=document.getElementById('toast');e.textContent=s;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove('show')},1800)}
-function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function UC(){var e=document.getElementById('cnt');if(e)e.textContent=words.length+' 个词'}
-function popTS(){['ft','qt','tsel'].forEach(function(id,i){var s=document.getElementById(id);if(!s)return;var c=s.value;s.innerHTML='<option value="">'+(i<2?'全部':'其他')+'</option>';tags.forEach(function(t){var o=document.createElement('option');o.value=t;o.textContent=t;s.appendChild(o)});if(tags.includes(c))s.value=c})}
-
-// Tab switching
-function ST(n){
-  document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.toggle('active',b.dataset.tab===n)});
-  document.querySelectorAll('.tc').forEach(function(e){e.classList.toggle('vh',e.id!=='tab-'+n)});
-  if(n==='list')RL();
-  if(n==='quiz')IQ();
-}
-document.querySelectorAll('.tab-bar button').forEach(function(b){b.onclick=function(){ST(b.dataset.tab)}});
-db("Tabs ready");
+</div><script>
+var dbg = document.getElementById("dbg");
+function d(m){dbg.style.display="block";dbg.innerHTML+=new Date().toLocaleTimeString()+": "+m+"<br>"}
+window.onerror=function(m,u,l){d("ERR: "+m+" ("+u+":"+l+")")}
+d("Page loaded");
 
 // Lookup
-document.getElementById('btnlk').onclick=function(){var w=document.getElementById('iw').value.trim().toLowerCase();if(w)LW(w)};
-document.getElementById('iw').oninput=function(){clearTimeout(window._t0);var v=this.value.trim();if(v.length>=2)window._t0=setTimeout(function(){LW(v)},400)};
+document.getElementById("btn-lookup").onclick = function() {
+  var w = document.getElementById("input-word").value.trim().toLowerCase();
+  d("Click: '" + w + "'");
+  if (!w) return;
+  lookupWord(w);
+};
 
-async function LW(w){
-  db("lookup: "+w);
-  document.getElementById('err').style.display='none';
-  document.getElementById('res').style.display='none';
-  document.getElementById('ld').style.display='block';
-  try{
-    var dr=await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/'+encodeURIComponent(w));
-    if(!dr.ok)throw Error('nf');
-    var dd=await dr.json();db("Dict: "+dd[0].word);
-    var e=dd[0],ph=e.phonetic||(e.phonetics&&e.phonetics.find(function(p){return p.text})?e.phonetics.find(function(p){return p.text}).text:'')||'',mn=e.meanings||[];
-    var cn='';try{var tr=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(w)+'&langpair=en|zh-CN');var td=await tr.json();cn=td.responseData?td.responseData.translatedText:''}catch(ex){db("Trans err: "+ex.message)}
-    var dfs=[],exs=[],pp='';
-    mn.forEach(function(m){if(!pp)pp=m.partOfSpeech;m.definitions.forEach(function(d){dfs.push({pos:m.partOfSpeech,text:d.definition});if(d.example&&exs.length<3)exs.push({pos:m.partOfSpeech,text:d.example,cn:''})})});
-    for(var i=0;i<exs.length;i++){try{var t2=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(exs[i].text)+'&langpair=en|zh-CN');var td2=await t2.json();exs[i].cn=td2.responseData?td2.responseData.translatedText:''}catch(ex){}}
-    document.getElementById('rw').textContent=w;
-    document.getElementById('rp').textContent=ph||'';
-    document.getElementById('rpos').textContent=pp||'';
-    document.getElementById('mi').value=cn||'';
-    var dc=document.getElementById('defs');
-    dc.innerHTML=dfs.length?dfs.slice(0,2).map(function(d){return '<span style="color:#4f6ef7;font-weight:500;font-size:11px">'+d.pos+'</span> '+esc(d.text)}).join('<br>'):'';
-    var ec=document.getElementById('exs');
-    ec.innerHTML=exs.length?exs.map(function(x){return '<div class="ex"><div class="en">'+esc(x.text)+'</div>'+(x.cn?'<div class="cn">'+esc(x.cn)+'</div>':'')+'</div>'}).join(''):'<div style="font-size:13px;color:#6b7280;padding:4px 0">暂未找到例句</div>';
-    window._lk={word:w,phonetic:ph,pos:pp,defs:dfs,examples:exs};
-    var pm={adverb:'副词',adjective:'形容词',verb:'动词',noun:'名词',phrase:'短语',preposition:'介词',conjunction:'连词',pronoun:'代词',interjection:'感叹词',determiner:'限定词',numeral:'数词'};
-    var sg=pm[pp]||(mn[0]?pm[mn[0].partOfSpeech]:'')||'其他';
-    var ts=document.getElementById('tsel');if(tags.includes(sg))ts.value=sg;
-    document.getElementById('res').style.display='block';db("Done")
-  }catch(e){db("Err: "+e.message);document.getElementById('errt').textContent=e.message==='nf'?'没找到这个词':'查询失败: '+e.message;document.getElementById('err').style.display='block'}
-  document.getElementById('ld').style.display='none'
-}
+document.getElementById("input-word").oninput = function() {
+  clearTimeout(window._timer);
+  var v = this.value.trim();
+  if (v.length < 2) return;
+  window._timer = setTimeout(function() { lookupWord(v); }, 400);
+};
 
-function spk(a){
-  var w=document.getElementById('rw').textContent||(window._lk&&window._lk.word);
-  if(!w||!window.speechSynthesis)return;
-  window.speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(w);u.lang=a;u.rate=0.85;
-  window.speechSynthesis.speak(u)
-}
+async function lookupWord(w) {
+  d("lookup: " + w);
+  document.getElementById("error").style.display = "none";
+  document.getElementById("result").style.display = "none";
+  document.getElementById("loading").style.display = "block";
 
-document.getElementById('sav').onclick=function(){
-  var w=document.getElementById('rw').textContent,m=document.getElementById('mi').value.trim();
-  if(!w||!m){TM('请先查询单词');return}
-  var lk=window._lk;
-  if(lk&&lk.word===w){
-    var ex=lk.examples||[];
-    words.unshift({id:Date.now()+'_'+Math.random().toString(36).slice(2,6),word:w,meaning:m,phonetic:lk.phonetic||'',pos:lk.pos||'',examples:ex.map(function(e){return{text:e.text,cn:e.cn||''}}),tag:document.getElementById('tsel').value,createdAt:Date.now()})
-  }else{
-    words.unshift({id:Date.now()+'_'+Math.random().toString(36).slice(2,6),word:w,meaning:m,phonetic:'',pos:'',examples:[],tag:document.getElementById('tsel').value,createdAt:Date.now()})
+  try {
+    d("Fetching dict API...");
+    var dr = await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(w));
+    if (!dr.ok) throw new Error("not_found");
+    var dd = await dr.json();
+    d("Dict API OK: " + dd[0].word);
+    var entry = dd[0];
+    var ph = entry.phonetic || (entry.phonetics && entry.phonetics[0] && entry.phonetics[0].text) || "";
+    var meanings = entry.meanings || [];
+
+    d("Translating...");
+    var cn = "";
+    try {
+      var tr = await fetch("https://api.mymemory.translated.net/get?q=" + encodeURIComponent(w) + "&langpair=en|zh-CN");
+      var td = await tr.json();
+      cn = td.responseData ? td.responseData.translatedText : "";
+    } catch(e) { d("Trans err: " + e.message); }
+
+    var defs = [];
+    var exs = [];
+    var pp = "";
+    meanings.forEach(function(m) {
+      if (!pp) pp = m.partOfSpeech;
+      m.definitions.forEach(function(d) {
+        defs.push({pos: m.partOfSpeech, text: d.definition});
+        if (d.example && exs.length < 3) exs.push({pos: m.partOfSpeech, text: d.example, cn: ""});
+      });
+    });
+
+    // Translate examples
+    for (var i = 0; i < exs.length; i++) {
+      try {
+        var tr2 = await fetch("https://api.mymemory.translated.net/get?q=" + encodeURIComponent(exs[i].text) + "&langpair=en|zh-CN");
+        var td2 = await tr2.json();
+        exs[i].cn = td2.responseData ? td2.responseData.translatedText : "";
+      } catch(e) {}
+    }
+
+    d("Displaying result");
+    document.getElementById("result-word").textContent = w;
+    document.getElementById("result-phonetic").textContent = ph || "";
+    document.getElementById("result-pos").textContent = pp || "";
+    document.getElementById("meaning-input").value = cn || "";
+
+    // Definitions
+    var dc = document.getElementById("def-container");
+    if (defs.length) {
+      dc.innerHTML = defs.slice(0,2).map(function(d) {
+        return '<span style="color:#4f6ef7;font-weight:500;font-size:11px">' + d.pos + '</span> ' + esc(d.text);
+      }).join("<br>");
+    } else { dc.innerHTML = ""; }
+
+    // Examples
+    var ec = document.getElementById("example-container");
+    if (exs.length) {
+      ec.innerHTML = exs.map(function(x) {
+        return '<div class="example"><div class="en">' + esc(x.text) + '</div>' + (x.cn ? '<div class="cn">' + esc(x.cn) + '</div>' : "") + '</div>';
+      }).join("");
+    } else {
+      ec.innerHTML = '<div style="font-size:13px;color:#6b7280;padding:4px 0">暂未找到例句</div>';
+    }
+
+    window._lookup = {word: w, phonetic: ph, pos: pp, defs: defs, examples: exs};
+    document.getElementById("result").style.display = "block";
+    d("Done");
+  } catch(e) {
+    d("Error: " + e.message);
+    document.getElementById("error-text").textContent = e.message === "not_found" ? "没找到这个单词，试试检查拼写" : "查询出错: " + e.message;
+    document.getElementById("error").style.display = "block";
   }
-  S();document.getElementById('iw').value='';document.getElementById('res').style.display='none';
-  document.getElementById('mi').value='';document.getElementById('rw').textContent='';UC();TM('✅ 已记录')
+  document.getElementById("loading").style.display = "none";
 }
 
-// Word list
+// Speech
+document.getElementById("btn-sound-gb").onclick = function() { speakWord("en-GB"); };
+document.getElementById("btn-sound-us").onclick = function() { speakWord("en-US"); };
+
+function speakWord(accent) {
+  var w = document.getElementById("result-word").textContent || (window._lookup && window._lookup.word);
+  if (!w || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(w);
+  u.lang = accent;
+  u.rate = 0.85;
+  window.speechSynthesis.speak(u);
+}
+
+// Save
+document.getElementById("btn-save").onclick = function() {
+  var w = document.getElementById("result-word").textContent;
+  var m = document.getElementById("meaning-input").value.trim();
+  if (!w || !m) return;
+  alert("Saving: " + w + " - " + m);
+};
+
+function esc(s) {
+  var d2 = document.createElement("div");
+  d2.textContent = s;
+  return d2.innerHTML;
+}
+
+d("Ready");
+
+// === Tab switching ===
+function ST(n){
+  document.querySelectorAll(".tab-bar button").forEach(function(b){b.classList.toggle("active",b.dataset.tab===n)});
+  document.querySelectorAll(".tc").forEach(function(e){e.classList.toggle("vh",e.id!=="tab-"+n)});
+  if(n==="list")RL();if(n==="quiz")IQ();
+}
+document.querySelectorAll(".tab-bar button").forEach(function(b){b.onclick=function(){ST(b.dataset.tab)}});
+db("Tabs ready");
+
+// === Word List ===
 function RL(){
-  var q=(document.getElementById('sw').value||'').trim().toLowerCase(),ft=document.getElementById('ft').value;
-  var f=words;if(q)f=words.filter(function(w){return w.word.toLowerCase().includes(q)||w.meaning.includes(q)});if(ft)f=f.filter(function(w){return w.tag===ft});
-  var c=document.getElementById('wl');
-  if(!f.length){c.innerHTML='<div style="text-align:center;padding:60px 20px;color:#6b7280"><div style="font-size:48px;margin-bottom:12px;opacity:.5">📖</div><p>'+(words.length?'没有匹配的单词':'还没有生词')+'</p></div>';return}
+  var q=(document.getElementById("sw").value||"").trim().toLowerCase(),ft=document.getElementById("ft").value;
+  var f=words;if(q)f=words.filter(function(w){return w.word.toLowerCase().includes(q)||w.meaning.includes(q)});
+  if(ft)f=f.filter(function(w){return w.tag===ft});
+  var c=document.getElementById("wl");
+  if(!f.length){c.innerHTML='<div style="text-align:center;padding:60px 20px;color:#6b7280"><div style="font-size:48px;margin-bottom:12px;opacity:.5">??</div><p>'+(words.length?"????":"?????")+"</p></div>";return}
   c.innerHTML=f.map(function(w){
-    var d2=new Date(w.createdAt),ds=(d2.getMonth()+1)+'/'+d2.getDate()+' '+String(d2.getHours()).padStart(2,'0')+':'+String(d2.getMinutes()).padStart(2,'0');
-    var ph=w.phonetic?'<span class="wc-p">'+esc(w.phonetic)+'</span>':'';
-    var ex='';if(w.examples&&w.examples.length)ex='<div class="wc-e">'+esc(w.examples[0].text)+(w.examples[0].cn?'<br><span style="font-style:normal">'+esc(w.examples[0].cn)+'</span>':'')+'</div>';
-    return '<div class="wc"><div class="wm"><div class="wc-w">'+esc(w.word)+ph+'</div><div class="wc-m">'+esc(w.meaning)+'</div>'+ex+'<div class="wc-meta"><span class="wc-t" onclick="editTag(''+w.id+'')">'+esc(w.tag||'其他')+'</span><span class="wc-time">'+ds+'</span>'+(w.phonetic?'<span class="wc-time" style="cursor:pointer" onclick="spkW(''+w.id+'')">🔊</span>':'')+'</div></div><button class="sec sm" onclick="delW(''+w.id+'')">✕</button></div>'
-  }).join('')
+    var d2=new Date(w.createdAt),ds=(d2.getMonth()+1)+"/"+d2.getDate()+" "+String(d2.getHours()).padStart(2,"0")+":"+String(d2.getMinutes()).padStart(2,"0");
+    var ph=w.phonetic?'<span class="wc-p">'+esc(w.phonetic)+"</span>":"";
+    var ex="";if(w.examples&&w.examples.length)ex='<div class="wc-e">'+esc(w.examples[0].text)+(w.examples[0].cn?'<br><span style="font-style:normal">'+esc(w.examples[0].cn)+"</span>":"")+"</div>";
+    return '<div class="wc"><div class="wm"><div class="wc-w">'+esc(w.word)+ph+'</div><div class="wc-m">'+esc(w.meaning)+"</div>"+ex+'<div class="wc-meta"><span class="wc-t" onclick="editTag(''+w.id+'')">'+esc(w.tag||"??")+'</span><span class="wc-time">'+ds+"</span>"+(w.phonetic?'<span class="wc-time" style="cursor:pointer" onclick="spkW(''+w.id+'')">??</span>":"")+'</div></div><button class="sec sm" onclick="delW(''+w.id+'')">?</button></div>'
+  }).join("")
 }
-document.getElementById('sw').oninput=RL;
-document.getElementById('ft').onchange=RL;
+document.getElementById("sw").oninput=RL;
+document.getElementById("ft").onchange=RL;
 
-function spkW(id){var w=words.find(function(x){return x.id===id});if(!w||!window.speechSynthesis)return;window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(w.word);u.lang='en-US';u.rate=0.85;window.speechSynthesis.speak(u)}
-function delW(id){if(!confirm('确定删除?'))return;words=words.filter(function(w){return w.id!==id});S();RL();UC()}
-function editTag(id){var w=words.find(function(x){return x.id===id});if(!w)return;var nt=prompt('标签:',w.tag);if(nt&&nt.trim()){w.tag=nt.trim();if(!tags.includes(w.tag)){tags.push(w.tag);popTS()}S();RL()}}
+function spkW(id){var w=words.find(function(x){return x.id===id});if(!w||!window.speechSynthesis)return;window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(w.word);u.lang="en-US";u.rate=0.85;window.speechSynthesis.speak(u)}
+function delW(id){if(!confirm("?????"))return;words=words.filter(function(w){return w.id!==id});S();RL();UC()}
+function editTag(id){var w=words.find(function(x){return x.id===id});if(!w)return;var nt=prompt("??:",w.tag);if(nt&&nt.trim()){w.tag=nt.trim();if(!tags.includes(w.tag)){tags.push(w.tag);popTS()}S();RL()}}
 
-// Quiz
-function IQ(){var ft=document.getElementById('qt').value,p=ft?words.filter(function(w){return w.tag===ft}):words;if(!p.length){document.getElementById('qc').style.display='none';document.getElementById('qe').style.display='block';return}document.getElementById('qe').style.display='none';document.getElementById('qc').style.display='block';if(!qq.length)RQ()}
-document.getElementById('qstart').onclick=RQ;
-function RQ(){var ft=document.getElementById('qt').value,p=ft?words.filter(function(w){return w.tag===ft}):words;qq=[].concat(p).sort(function(){return Math.random()-0.5});qi=0;document.getElementById('qr').textContent='';document.getElementById('qa').value='';document.getElementById('qa').disabled=false;if(!qq.length){document.getElementById('qe').style.display='block';document.getElementById('qc').style.display='none';return}showQ()}
-function showQ(){var q=qq[qi];if(!q){RQ();return}var mm=document.getElementById('qmode').checked;document.getElementById('qq').textContent=mm?q.meaning:q.word;document.getElementById('qi').textContent=(qi+1)+'/'+qq.length+(q.phonetic&&!mm?' '+q.phonetic:'');document.getElementById('qa').value='';document.getElementById('qa').disabled=false;document.getElementById('qa').focus();document.getElementById('qr').textContent=''}
-document.getElementById('qchk').onclick=checkQ;document.getElementById('qa').onkeydown=function(e){if(e.key==='Enter')checkQ()};
-function checkQ(){var q=qq[qi];if(!q)return;var a=document.getElementById('qa').value.trim().toLowerCase(),mm=document.getElementById('qmode').checked,re=document.getElementById('qr');if(mm?(a===q.word.toLowerCase()):(a===q.meaning)){re.textContent='✓ 正确'+(q.examples&&q.examples[0]?' 例: '+q.examples[0].text:'');re.style.color='#22c55e';advQ()}else{re.textContent='✗ 不对';re.style.color='#ef4444'}}
-function advQ(){qi++;if(qi>=qq.length){document.getElementById('qr').textContent='🎉 完成! '+qq.length+' 个';document.getElementById('qa').disabled=true;qq=[];return}setTimeout(showQ,600)}
-document.getElementById('qans').onclick=function(){var q=qq[qi];if(!q)return;var mm=document.getElementById('qmode').checked,a=mm?q.word:q.meaning,ex=q.examples&&q.examples[0]?' | '+q.examples[0].text:'';document.getElementById('qr').textContent='💡 '+(mm?'英文: ':'释义: ')+a+ex;setTimeout(function(){advQ()},1200)}
+// === Quiz ===
+window._qq=[];window._qi=0;
+function IQ(){var ft=document.getElementById("qt").value,p=ft?words.filter(function(w){return w.tag===ft}):words;if(!p.length){document.getElementById("qc").style.display="none";document.getElementById("qe").style.display="block";return}document.getElementById("qe").style.display="none";document.getElementById("qc").style.display="block";if(!window._qq.length)RQ()}
+document.getElementById("qstart").onclick=RQ;
+function RQ(){var ft=document.getElementById("qt").value,p=ft?words.filter(function(w){return w.tag===ft}):words;window._qq=[].concat(p).sort(function(){return Math.random()-0.5});window._qi=0;document.getElementById("qr").textContent="";document.getElementById("qa").value="";document.getElementById("qa").disabled=false;if(!window._qq.length){document.getElementById("qe").style.display="block";document.getElementById("qc").style.display="none";return}showQ()}
+function showQ(){var q=window._qq[window._qi];if(!q){RQ();return}var mm=document.getElementById("qmode").checked;document.getElementById("qq").textContent=mm?q.meaning:q.word;document.getElementById("qi").textContent=(window._qi+1)+"/"+window._qq.length+(q.phonetic&&!mm?" "+q.phonetic:"");document.getElementById("qa").value="";document.getElementById("qa").disabled=false;document.getElementById("qa").focus();document.getElementById("qr").textContent=""}
+document.getElementById("qchk").onclick=checkQ;document.getElementById("qa").onkeydown=function(e){if(e.key==="Enter")checkQ()};
+function checkQ(){var q=window._qq[window._qi];if(!q)return;var a=document.getElementById("qa").value.trim().toLowerCase(),mm=document.getElementById("qmode").checked,re=document.getElementById("qr");if(mm?(a===q.word.toLowerCase()):(a===q.meaning)){re.textContent="? ??"+(q.examples&&q.examples[0]?" ?: "+q.examples[0].text:"");re.style.color="#22c55e";advQ()}else{re.textContent="? ??";re.style.color="#ef4444"}}
+function advQ(){window._qi++;if(window._qi>=window._qq.length){document.getElementById("qr").textContent="?? ??! "+window._qq.length+" ?";document.getElementById("qa").disabled=true;window._qq=[];return}setTimeout(showQ,600)}
+document.getElementById("qans").onclick=function(){var q=window._qq[window._qi];if(!q)return;var mm=document.getElementById("qmode").checked,a=mm?q.word:q.meaning,ex=q.examples&&q.examples[0]?" | "+q.examples[0].text:"";document.getElementById("qr").textContent="?? "+(mm?"??: ":"??: ")+a+ex;setTimeout(function(){advQ()},1200)}
 
-// Tags
-function openTM(){renderTG();document.getElementById('tmodal').style.display='block';document.getElementById('nti').value='';document.getElementById('nti').focus()}
-function closeTM(){document.getElementById('tmodal').style.display='none'}
-document.querySelectorAll('.header-actions .sec').forEach(function(b){if(b.title==='分类')b.onclick=openTM});
-function renderTG(){document.getElementById('tg').innerHTML=tags.map(function(t){return'<span>'+esc(t)+' <span class="d" onclick="rmTG(''+esc(t)+'')">✕</span></span>'}).join('')}
-function addNT(){var inp=document.getElementById('nti'),n=inp.value.trim();if(!n||tags.includes(n))return;tags.push(n);S();inp.value='';renderTG();popTS()}
-function rmTG(n){if(!confirm('删除 "'+n+'"?'))return;tags=tags.filter(function(t){return t!==n});words.forEach(function(w){if(w.tag===n)w.tag='其他'});S();renderTG();popTS();RL()}
+// === Tags ===
+function openTM(){renderTG();document.getElementById("tmodal").style.display="block";document.getElementById("nti").value="";document.getElementById("nti").focus()}
+function closeTM(){document.getElementById("tmodal").style.display="none"}
+function renderTG(){document.getElementById("tg").innerHTML=tags.map(function(t){return'<span style="display:inline-flex;align-items:center;gap:4px;font-size:13px;padding:4px 10px;border-radius:14px;background:rgba(79,110,247,.1);color:#4f6ef7">'+esc(t)+' <span style="cursor:pointer;opacity:.6" onclick="rmTG(''+esc(t)+'')">?</span></span>'}).join("")}
+function addNT(){var inp=document.getElementById("nti"),n=inp.value.trim();if(!n||tags.includes(n))return;tags.push(n);S();inp.value="";renderTG();popTS()}
+function rmTG(n){if(!confirm("?????"))return;tags=tags.filter(function(t){return t!==n});words.forEach(function(w){if(w.tag===n)w.tag="??"});S();renderTG();popTS();RL()}
 
-// Export/Import
-function exp(){var d=JSON.stringify({words:words,tags:tags},null,2),b=new Blob([d],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='生词本_'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);TM('已导出')}
-function imp(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var d=JSON.parse(ev.target.result);if(!d.words)throw Error();var ids={};words.forEach(function(w){ids[w.id]=1});var n=0;d.words.forEach(function(w){if(!ids[w.id]){words.push(w);ids[w.id]=1;n++}});if(d.tags)d.tags.forEach(function(t){if(!tags.includes(t))tags.push(t)});S();popTS();RL();UC();TM('导入 '+n+' 个')}catch(ex){TM('导入失败')}};r.readAsText(f);e.target.value=''}
+// Add tag button handler (hijack the existing one)
+document.querySelectorAll(".row button.sec")[0].onclick=openTM;
 
-// Init
-L();popTS();UC();RL();popTS();db("Ready");
-</script></body></html>
+// === Export/Import ===
+function exp(){var d=JSON.stringify({words:words,tags:tags},null,2),b=new Blob([d],{type:"application/json"}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="???_"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);TM("???")}
+function imp(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var d=JSON.parse(ev.target.result);if(!d.words)throw Error();var ids={};words.forEach(function(w){ids[w.id]=1});var n=0;d.words.forEach(function(w){if(!ids[w.id]){words.push(w);ids[w.id]=1;n++}});if(d.tags)d.tags.forEach(function(t){if(!tags.includes(t))tags.push(t)});S();popTS();RL();UC();TM("?? "+n+" ?")}catch(ex){TM("????")}};r.readAsText(f);e.target.value=""}
+
+// Set first tag button (export from header)
+var hdrBtns = document.querySelectorAll(".row:first-child .sec");
+if(hdrBtns.length>=2){hdrBtns[0].onclick=exp;hdrBtns[1].onclick=function(){document.getElementById("impf").click()}}
+</script>
+</body>
+</html>
