@@ -226,12 +226,7 @@ function speakWord(accent) {
 }
 
 // Save
-document.getElementById("btn-save").onclick = function() {
-  var w = document.getElementById("result-word").textContent;
-  var m = document.getElementById("meaning-input").value.trim();
-  if (!w || !m) return;
-  alert("Saving: " + w + " - " + m);
-};
+document.getElementById('btn-save').onclick = function(){var w=document.getElementById('rw').textContent,m=document.getElementById('mi').value.trim();if(!w||!m){return}var lk=window._lk;if(lk&&lk.word===w){var ex=lk.examples||[];words.unshift({id:Date.now()+'_'+Math.random().toString(36).slice(2,6),word:w,meaning:m,phonetic:lk.phonetic||'',pos:lk.pos||'',tag:'其他',examples:ex.map(function(e){return{text:e.text,cn:e.cn||''}}),createdAt:Date.now()})}else{words.unshift({id:Date.now()+'_'+Math.random().toString(36).slice(2,6),word:w,meaning:m,phonetic:'',pos:'',tag:'其他',examples:[],createdAt:Date.now()})}S();document.getElementById('iw').value='';document.getElementById('res').style.display='none';document.getElementById('mi').value='';document.getElementById('rw').textContent='';UC();TM('已保存')}
 
 function esc(s) {
   var d2 = document.createElement("div");
