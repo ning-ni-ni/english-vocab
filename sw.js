@@ -1,22 +1,4 @@
-﻿const CACHE = "vocab-v1";
-const FILES = [
-  "/english-vocab/",
-  "/english-vocab/index.html",
-  "/english-vocab/manifest.json",
-  "/english-vocab/icon-192.png"
-];
-
-self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
-  self.skipWaiting();
-});
-
-self.addEventListener("activate", e => {
-  e.waitUntil(clients.claim());
-});
-
-self.addEventListener("fetch", e => {
-  e.respondWith(
-    caches.match(e.request).then(r => r || fetch(e.request))
-  );
-});
+const CACHE="vocab-v2";
+self.addEventListener("install",function(e){e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(["/english-vocab/","/english-vocab/index.html","/english-vocab/manifest.json","/english-vocab/icon-192.png"])}));self.skipWaiting()});
+self.addEventListener("activate",function(e){e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE}).map(function(k){return caches.delete(k)}))}));return self.clients.claim()});
+self.addEventListener("fetch",function(e){e.respondWith(fetch(e.request).catch(function(){return caches.match(e.request)}))});
