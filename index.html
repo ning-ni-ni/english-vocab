@@ -112,6 +112,14 @@
 <div id="status"></div>
 
 </div><script>
+
+var SK='eng_voc',TK='eng_voc_tags',words=[],tags=['師词','形容词','动词','名词','短语','其他'];
+function S(){localStorage.setItem(SK,JSON.stringify(words));localStorage.setItem(TK,JSON.stringify(tags))}
+function L(){try{var r=localStorage.getItem(SK);words=r?JSON.parse(r):[]}catch(e){}try{var r=localStorage.getItem(TK);if(r)tags=JSON.parse(r)}catch(e){}}
+function UC(){var e=document.getElementById('cnt');if(e)e.textContent=words.length+'个词'}
+function TM(s){var e=document.getElementById('toast');e.textContent=s;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove('show')},1800)}
+function popTS(){['ft','qt'].forEach(function(id,i){var s=document.getElementById(id);if(!s)return;var c=s.value;s.innerHTML='<option value="">'+(i===0?'全部':'全部词')+'</option>';tags.forEach(function(t){var o=document.createElement('option');o.value=t;o.textContent=t;s.appendChild(o)});if(tags.includes(c))s.value=c})}
+
 var dbg = document.getElementById("dbg");
 function d(m){dbg.style.display="block";dbg.innerHTML+=new Date().toLocaleTimeString()+": "+m+"<br>"}
 window.onerror=function(m,u,l){d("ERR: "+m+" ("+u+":"+l+")")}
@@ -234,7 +242,7 @@ function esc(s) {
   return d2.innerHTML;
 }
 
-d("Ready");
+L();popTS();UC();RL();d("Ready");
 
 // Tab switching
 function ST(n){document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.toggle('active',b.dataset.tab===n)});document.querySelectorAll('.tc').forEach(function(e){e.classList.toggle('vh',e.id!=='tab-'+n)});if(n==='list')RL();if(n==='quiz')IQ()}
