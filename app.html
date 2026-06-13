@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>英语生词本</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;font-size:16px;line-height:1.5;background:#f5f5f5;color:#1a1a2e;max-width:600px;margin:0 auto;padding:16px;min-height:100dvh}
+  @media(prefers-color-scheme:dark){body{background:#111118;color:#e8e8ed}}
+  .wrap{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:16px}
+  @media(prefers-color-scheme:dark){.wrap{background:#1a1a25;box-shadow:0 1px 3px rgba(0,0,0,.3)}}
+  h1{font-size:20px;margin-bottom:8px}
+  .row{display:flex;gap:8px}
+  .row input{flex:1;padding:10px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:16px;outline:none;width:100%;background:#f5f5f5;color:#1a1a2e;font-family:inherit}
+  .row input:focus{border-color:#4f6ef7}
+  @media(prefers-color-scheme:dark){.row input{background:#111118;color:#e8e8ed;border-color:#2a2a38}}
+  button{padding:10px 18px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;min-height:44px;white-space:nowrap}
+  button.primary{background:#4f6ef7;color:#fff}
+  button.secondary{background:transparent;color:#6b7280;border:1.5px solid #e5e7eb}
+  @media(prefers-color-scheme:dark){button.secondary{color:#9ca3af;border-color:#2a2a38}}
+  button:active{transform:scale(0.97)}
+  #dbg{display:none;background:#ffe;color:#000;padding:8px;font-size:13px;white-space:pre-wrap;border-radius:6px;margin-bottom:8px}
+  #loading{display:none;text-align:center;padding:32px}
+  #error{display:none;text-align:center;padding:24px;color:#6b7280}
+  #error .icon{font-size:36px;margin-bottom:8px}
+  #result{display:none;margin-top:12px}
+  #result .word{font-size:24px;font-weight:700;margin-bottom:4px}
+  #result .phonetic{font-size:14px;color:#6b7280;margin-bottom:8px}
+  #result .pos{display:inline-block;font-size:12px;padding:3px 10px;border-radius:10px;background:#eef;color:#4f6ef7;margin-bottom:12px}
+  #result .section{border-top:1px solid #e5e7eb;padding:12px 0}
+  @media(prefers-color-scheme:dark){#result .section{border-color:#2a2a38}}
+  #result .label{font-size:13px;font-weight:600;color:#6b7280;margin-bottom:8px}
+  #result .def{padding:6px 0;font-size:13px;color:#6b7280;line-height:1.5}
+  #result .def .pos-label{color:#4f6ef7;font-weight:500;font-size:11px}
+  #result .example{padding:8px 10px;background:#f5f5f5;border-radius:6px;margin-bottom:6px;line-height:1.5}
+  @media(prefers-color-scheme:dark){#result .example{background:#111118}}
+  #result .example .en{font-size:14px;font-style:italic}
+  #result .example .cn{font-size:13px;color:#6b7280;margin-top:2px}
+  .say-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .say-row button{flex:1;min-width:100px;font-size:14px}
+  #meaning-input{padding:8px 10px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:16px;font-weight:500;outline:none;width:100%;background:#f5f5f5;color:#1a1a2e;font-family:inherit;margin-top:4px}
+  #meaning-input:focus{border-color:#4f6ef7}
+  @media(prefers-color-scheme:dark){#meaning-input{background:#111118;color:#e8e8ed;border-color:#2a2a38}}
+  #result .save-row{display:flex;gap:8px;border-top:1px solid #e5e7eb;padding-top:12px}
+  @media(prefers-color-scheme:dark){#result .save-row{border-color:#2a2a38}}
+  #result .save-row button{flex:1}
+  #result .save-row select{flex:0 0 auto;padding:8px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;outline:none;background:#f5f5f5;color:#1a1a2e}
+  @media(prefers-color-scheme:dark){#result .save-row select{background:#111118;color:#e8e8ed;border-color:#2a2a38}}
+</style>
+</head>
+<body>
+
+<div id="dbg"></div>
+<h1>英语生词本 <span id="count" style="font-size:14px;color:#6b7280;font-weight:400">0 个词</span></h1>
+
+<div class="wrap" style="gap:8px">
+  <div class="row">
+    <input type="text" id="input-word" placeholder="输入英语单词..." autocomplete="off">
+    <button class="primary" id="btn-lookup">🔍</button>
+  </div>
+</div>
+
+<div id="loading" class="wrap">
+  <div style="width:28px;height:28px;border:3px solid #e5e7eb;border-top-color:#4f6ef7;border-radius:50%;animation:spin .6s linear infinite;margin:0 auto"></div>
+  <div style="margin-top:8px;color:#6b7280;font-size:14px">正在查询...</div>
+</div>
+
+<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+<div id="error" class="wrap">
+  <div class="icon">😕</div>
+  <div id="error-text"></div>
+</div>
+
+<div id="result">
+  <div class="wrap">
+    <div id="result-word" class="word"></div>
+    <div id="result-phonetic" class="phonetic"></div>
+    <div id="result-pos" class="pos"></div>
+
+    <div class="section">
+      <div class="label">📖 含义 · 掌握什么</div>
+      <input type="text" id="meaning-input" placeholder="中文释义...">
+      <div id="def-container" class="def" style="margin-top:6px"></div>
+    </div>
+
+    <div class="section">
+      <div class="label">💬 用法 · 如何应用</div>
+      <div id="example-container"></div>
+    </div>
+
+    <div class="section">
+      <div class="label">🔊 发音 · 如何说</div>
+      <div class="say-row">
+        <button class="secondary" id="btn-sound-gb">🇬🇧 英式发音</button>
+        <button class="secondary" id="btn-sound-us">🇺🇸 美式发音</button>
+      </div>
+    </div>
+
+    <div class="save-row">
+      <select id="result-tag"><option>其他</option></select>
+      <button class="primary" id="btn-save">＋ 记录生词</button>
+    </div>
+  </div>
+</div>
+
+<div id="status"></div>
+
+<script>
+var dbg = document.getElementById("dbg");
+function d(m){dbg.style.display="block";dbg.innerHTML+=new Date().toLocaleTimeString()+": "+m+"<br>"}
+window.onerror=function(m,u,l){d("ERR: "+m+" ("+u+":"+l+")")}
+d("Page loaded");
+
+// Lookup
+document.getElementById("btn-lookup").onclick = function() {
+  var w = document.getElementById("input-word").value.trim().toLowerCase();
+  d("Click: '" + w + "'");
+  if (!w) return;
+  lookupWord(w);
+};
+
+document.getElementById("input-word").oninput = function() {
+  clearTimeout(window._timer);
+  var v = this.value.trim();
+  if (v.length < 2) return;
+  window._timer = setTimeout(function() { lookupWord(v); }, 400);
+};
+
+async function lookupWord(w) {
+  d("lookup: " + w);
+  document.getElementById("error").style.display = "none";
+  document.getElementById("result").style.display = "none";
+  document.getElementById("loading").style.display = "block";
+
+  try {
+    d("Fetching dict API...");
+    var dr = await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/" + encodeURIComponent(w));
+    if (!dr.ok) throw new Error("not_found");
+    var dd = await dr.json();
+    d("Dict API OK: " + dd[0].word);
+    var entry = dd[0];
+    var ph = entry.phonetic || (entry.phonetics && entry.phonetics[0] && entry.phonetics[0].text) || "";
+    var meanings = entry.meanings || [];
+
+    d("Translating...");
+    var cn = "";
+    try {
+      var tr = await fetch("https://api.mymemory.translated.net/get?q=" + encodeURIComponent(w) + "&langpair=en|zh-CN");
+      var td = await tr.json();
+      cn = td.responseData ? td.responseData.translatedText : "";
+    } catch(e) { d("Trans err: " + e.message); }
+
+    var defs = [];
+    var exs = [];
+    var pp = "";
+    meanings.forEach(function(m) {
+      if (!pp) pp = m.partOfSpeech;
+      m.definitions.forEach(function(d) {
+        defs.push({pos: m.partOfSpeech, text: d.definition});
+        if (d.example && exs.length < 3) exs.push({pos: m.partOfSpeech, text: d.example, cn: ""});
+      });
+    });
+
+    // Translate examples
+    for (var i = 0; i < exs.length; i++) {
+      try {
+        var tr2 = await fetch("https://api.mymemory.translated.net/get?q=" + encodeURIComponent(exs[i].text) + "&langpair=en|zh-CN");
+        var td2 = await tr2.json();
+        exs[i].cn = td2.responseData ? td2.responseData.translatedText : "";
+      } catch(e) {}
+    }
+
+    d("Displaying result");
+    document.getElementById("result-word").textContent = w;
+    document.getElementById("result-phonetic").textContent = ph || "";
+    document.getElementById("result-pos").textContent = pp || "";
+    document.getElementById("meaning-input").value = cn || "";
+
+    // Definitions
+    var dc = document.getElementById("def-container");
+    if (defs.length) {
+      dc.innerHTML = defs.slice(0,2).map(function(d) {
+        return '<span style="color:#4f6ef7;font-weight:500;font-size:11px">' + d.pos + '</span> ' + esc(d.text);
+      }).join("<br>");
+    } else { dc.innerHTML = ""; }
+
+    // Examples
+    var ec = document.getElementById("example-container");
+    if (exs.length) {
+      ec.innerHTML = exs.map(function(x) {
+        return '<div class="example"><div class="en">' + esc(x.text) + '</div>' + (x.cn ? '<div class="cn">' + esc(x.cn) + '</div>' : "") + '</div>';
+      }).join("");
+    } else {
+      ec.innerHTML = '<div style="font-size:13px;color:#6b7280;padding:4px 0">暂未找到例句</div>';
+    }
+
+    window._lookup = {word: w, phonetic: ph, pos: pp, defs: defs, examples: exs};
+    document.getElementById("result").style.display = "block";
+    d("Done");
+  } catch(e) {
+    d("Error: " + e.message);
+    document.getElementById("error-text").textContent = e.message === "not_found" ? "没找到这个单词，试试检查拼写" : "查询出错: " + e.message;
+    document.getElementById("error").style.display = "block";
+  }
+  document.getElementById("loading").style.display = "none";
+}
+
+// Speech
+document.getElementById("btn-sound-gb").onclick = function() { speakWord("en-GB"); };
+document.getElementById("btn-sound-us").onclick = function() { speakWord("en-US"); };
+
+function speakWord(accent) {
+  var w = document.getElementById("result-word").textContent || (window._lookup && window._lookup.word);
+  if (!w || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(w);
+  u.lang = accent;
+  u.rate = 0.85;
+  window.speechSynthesis.speak(u);
+}
+
+// Save
+document.getElementById("btn-save").onclick = function() {
+  var w = document.getElementById("result-word").textContent;
+  var m = document.getElementById("meaning-input").value.trim();
+  if (!w || !m) return;
+  alert("Saving: " + w + " - " + m);
+};
+
+function esc(s) {
+  var d2 = document.createElement("div");
+  d2.textContent = s;
+  return d2.innerHTML;
+}
+
+d("Ready");
+</script>
+</body>
+</html>
