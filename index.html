@@ -68,7 +68,7 @@ button:active{transform:scale(0.97)}
 </style>
 </head>
 <body>
-<div id="dbg"></div>
+
 <div id="toast"></div>
 <div class="row" style="justify-content:space-between;margin-bottom:12px">
   <h1>英语生词本 <span id="cnt" style="font-size:14px;color:#6b7280;font-weight:400">0 个词</span></h1>
@@ -160,7 +160,7 @@ button:active{transform:scale(0.97)}
 
 <script>
 var D=document.getElementById("dbg");
-function d(m){D.style.display="block";D.innerHTML+=new Date().toLocaleTimeString()+": "+m+"<br>"}
+function d(m){}
 window.onerror=function(m,u,l){d("ERR: "+m+" ("+u+":"+l+")")};d("Loaded");
 var SK="eng_voc",TK="eng_voc_tags",words=[],tags=["副词","形容词","动词","名词","短语","其他"];
 function S(){localStorage.setItem(SK,JSON.stringify(words));localStorage.setItem(TK,JSON.stringify(tags))}
@@ -176,7 +176,7 @@ document.querySelectorAll(".tab-bar button").forEach(function(b){b.onclick=funct
 
 // Lookup
 document.getElementById("btnlk").onclick=function(){var w=document.getElementById("iw").value.trim().toLowerCase();if(w)LW(w)};
-document.getElementById("iw").oninput=function(){clearTimeout(window._t0);var v=this.value.trim();if(v.length>=2)window._t0=setTimeout(function(){LW(v)},400)};
+
 async function LW(w){d("lookup: "+w);document.getElementById("err").style.display="none";document.getElementById("res").style.display="none";document.getElementById("ld").style.display="block";try{var dr=await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(w));if(!dr.ok)throw Error("nf");var dd=await dr.json();d("OK: "+dd[0].word);var e=dd[0],ph=e.phonetic||"",mn=e.meanings||[];var cn="";try{var tr=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(w)+"&langpair=en|zh-CN");var td=await tr.json();cn=td.responseData?td.responseData.translatedText:"";if(cn&&!/[\u4e00-\u9fff]/.test(cn))cn=""}catch(e){}var dfs=[],exs=[],pp="";mn.forEach(function(m){if(!pp)pp=m.partOfSpeech;m.definitions.forEach(function(d){dfs.push({pos:m.partOfSpeech,text:d.definition});if(d.example&&exs.length<3)exs.push({pos:m.partOfSpeech,text:d.example,cn:""})})});for(var i=0;i<exs.length;i++){try{var t2=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(exs[i].text)+"&langpair=en|zh-CN");var td2=await t2.json();exs[i].cn=td2.responseData?td2.responseData.translatedText:"";if(exs[i].cn&&!/[\u4e00-\u9fff]/.test(exs[i].cn))exs[i].cn=""}catch(e){}}document.getElementById("rw").textContent=w;document.getElementById("rp").textContent=ph||"";document.getElementById("rpos").textContent=pp||"";document.getElementById("mi").value=cn||"";var dc=document.getElementById("defs");dc.innerHTML=dfs.length?dfs.slice(0,2).map(function(d){return"<b>"+d.pos+"</b> "+esc(d.text)}).join("<br>"):"";var ec=document.getElementById("exs");ec.innerHTML=exs.length?exs.map(function(x){return'<div class="ex"><div class="en">'+esc(x.text)+"</div>"+(x.cn?'<div class="cn">'+esc(x.cn)+"</div>":"")+"</div>"}).join(""):'<div style="font-size:13px;color:#6b7280;padding:4px 0">暂未找到例句</div>';window._lk={word:w,phonetic:ph,pos:pp,defs:dfs,examples:exs};var pm={adverb:"副词",adjective:"形容词",verb:"动词",noun:"名词",phrase:"短语"};var sg=pm[pp]||"其他";var ts=document.getElementById("tsel");if(tags.includes(sg))ts.value=sg;document.getElementById("res").style.display="block"}catch(e){d("Err: "+e.message);document.getElementById("errt").textContent=e.message==="nf"?"没找到这个词":"查询失败";document.getElementById("err").style.display="block"}document.getElementById("ld").style.display="none"}
 
 // Speech
