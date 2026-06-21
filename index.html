@@ -75,7 +75,7 @@ button:active{transform:scale(0.97)}
   <div style="display:flex;gap:4px">
     <button class="sec sm" id="btn-export">↗</button>
     <button class="sec sm" id="btn-import">↘</button>
-    <button class="sec sm" id="btn-tags">🏷</button>
+    <button class="sec sm" id="btn-tags">🏷</button><button class="sec sm" id="btn-share">🔄</button>
     <input type="file" id="impf" accept=".json" style="display:none">
   </div>
 </div>
@@ -162,13 +162,17 @@ button:active{transform:scale(0.97)}
 var D=document.getElementById("dbg");
 function d(m){}
 window.onerror=function(m,u,l){d("ERR: "+m+" ("+u+":"+l+")")};d("Loaded");
-var SK="eng_voc",TK="eng_voc_tags",words=[],tags=["副词","形容词","动词","名词","短语","其他"];
+var SK="eng_voc",TK="eng_voc_tags",words=[],tags=["副词","形容词","动词","名词","短语","其他"];var GH="",GHOWNER="ning-ni-ni",GHREPO="english-vocab",GHFILE="vocab-data.json";
 function S(){localStorage.setItem(SK,JSON.stringify(words));localStorage.setItem(TK,JSON.stringify(tags))}
-function L(){try{var r=localStorage.getItem(SK);words=r?JSON.parse(r):[]}catch(e){}try{var r=localStorage.getItem(TK);if(r)tags=JSON.parse(r)}catch(e){}}
+function L(){try{var r=localStorage.getItem(SK);words=r?JSON.parse(r):[]}catch(e){}try{var r=localStorage.getItem(TK);if(r)tags=JSON.parse(r)}catch(e){}syncPull()}
 function UC(){var e=document.getElementById("cnt");if(e)e.textContent=words.length+" 个词"}
 function TM(s){var e=document.getElementById("toast");if(e){e.textContent=s;e.style.opacity="1";clearTimeout(e._t);e._t=setTimeout(function(){e.style.opacity="0"},1800)}}
 function popTS(){["ft","qt"].forEach(function(id,i){var s=document.getElementById(id);if(!s)return;var c=s.value;s.innerHTML='<option value="">'+(i?"全部词":"全部")+"</option>";tags.forEach(function(t){var o=document.createElement("option");o.value=t;o.textContent=t;s.appendChild(o)});if(tags.includes(c))s.value=c})}
 function esc(s){var d2=document.createElement("div");d2.textContent=s;return d2.innerHTML}
+async function syncPull(){try{var r=await fetch("https://raw.githubusercontent.com/"+GHOWNER+"/"+GHREPO+"/main/"+GHFILE);if(!r.ok)return;var d=await r.json();if(!d.words)return;var ids={};words.forEach(function(w){ids[w.id]=1});var a=0;d.words.forEach(function(w){if(!ids[w.id]){words.push(w);ids[w.id]=1;a++}});if(d.tags)d.tags.forEach(function(t){if(!tags.includes(t))tags.push(t)});if(a>0){S()}}catch(e){}}
+function syncShare(){var d=JSON.stringify({words:words,tags:tags,version:2},null,2);if(navigator.share){navigator.share({title:"生词本数据",text:"我的英语生词本",files:[new File([d],"vocab.json",{type:"application/json"})]}).catch(function(){})}else{var a=document.createElement("a");a.href="data:application/json,"+encodeURIComponent(d);a.download="vocab_"+new Date().toISOString().slice(0,10)+".json";a.click()}}
+,body:JSON.stringify({message:"sync",content:b,sha:sha})});if(r2.ok)d("Sync pushed")}catch(e){d("Sync push err")}}
+
 
 // Tab switching
 function ST(n){document.querySelectorAll(".tab-bar button").forEach(function(b){b.classList.toggle("active",b.dataset.tab===n)});document.querySelectorAll(".tc").forEach(function(e){e.classList.toggle("vh",e.id!=="tab-"+n)});if(n==="list")RL();if(n==="quiz")IQ()}
@@ -212,11 +216,14 @@ function addNT(){var inp=document.getElementById("nti");if(!inp)return;var n=inp
 // Export/Import
 document.getElementById("btn-export").onclick=function(){var d=JSON.stringify({words:words,tags:tags},null,2);var b=new Blob([d],{type:"application/json"});var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download="生词本_"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);TM("已导出")}
 document.getElementById("btn-import").onclick=function(){document.getElementById("impf").click()}
-document.getElementById("btn-tags").onclick=openTM;
+document.getElementById("btn-tags").onclick=openTM;document.getElementById("btn-share").onclick=syncShare;
 document.getElementById("impf").onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){try{var d=JSON.parse(ev.target.result);if(!d.words)throw Error();var ids={};words.forEach(function(w){ids[w.id]=1});var n=0;d.words.forEach(function(w){if(!ids[w.id]){words.push(w);ids[w.id]=1;n++}});if(d.tags)d.tags.forEach(function(t){if(!tags.includes(t))tags.push(t)});S();popTS();RL();UC();TM("导入 "+n)}catch(ex){TM("失败")}};r.readAsText(f)}
 
 L();popTS();UC();d("Ready");
 </script>
 </body>
 </html>
+
+
+
 
